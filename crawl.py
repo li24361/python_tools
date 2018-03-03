@@ -9,9 +9,9 @@ import json
 #promotion
 HOST   = '10.135.111.22'
 USER   = 'dev'
-PASSWD = 'dev'
+PASSWD = '123'
 DB     = 'job'
-PORT   = 3307
+PORT   = 3309
 
 url = "http://www.lagou.com/jobs/positionAjax.json?city=%E9%9D%92%E5%B2%9B&needAddtionalResult=false"
 
@@ -27,7 +27,8 @@ while True:
 	if page_size*(page-1) > total_size:
 		break
 	data = {'first': 'false', 'pn': page,'kd':''}
-	r = requests.post(url,data=data)
+  	proxies={"http":"http//119.167.153.50:8118"}
+	r = requests.post(url,data=data,proxies=proxies)
 	try:
 		jobs = json.loads(r.text)
 	except Exception as e:
@@ -51,8 +52,8 @@ while True:
 		position_id = info['positionId']
 		position_url = "http://www.lagou.com/jobs/%s.html" % (position_id)
 		r = requests.get(position_url)
-		soup = BeautifulSoup(r.text, "html.parser")
 		try:
+                        soup = BeautifulSoup(r.text, "html.parser")
 			address = soup.select(".work_addr")[0].get_text(strip=True).encode('utf8')
 		except Exception as e:
 			address =''
@@ -60,4 +61,3 @@ while True:
 		cur.execute(sql % (company_id, company, position_id, position, position_advantage, salary, education, position_url,address))
 	conn.commit()
 cur.close()
-

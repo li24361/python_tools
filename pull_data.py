@@ -4,12 +4,17 @@
 import MySQLImportExport
 
 #product
-HOST = '10.251.12.106'
+# HOST = '10.228.12.107'
+# USER = 'rdon'
+# PASSWD = 'readonlypwd'
+# DB = ''
+# PORT = 3306
+
+HOST = '10.252.12.106'
 USER = 'dev'
 PASSWD = '123'
 DB = ''
 PORT = 3306
-
 
 #hry
 HOST1 = '10.135.111.22'
@@ -26,19 +31,15 @@ class PullData(object):
         print "------------------start------------------ "
         con = MySQLImportExport.MySQLImporter(HOST, USER, PASSWD, DB).get_connection()
         con1 = MySQLImportExport.MySQLExporter(HOST1, USER1, PASSWD1, DB1).get_connection()
-        bid_id = '23060'
+        bid_id = '48'
         print "bid_id="+bid_id
-        # self.pull_data(con, con1, 's65.ocp_message', {'bid_id': bid_id})
-        
+
         self.pull_data(con, con1, 's62.t6230', {'F01': bid_id})
         self.pull_data(con, con1, 's62.t6231', {'F01': bid_id})
         self.pull_data(con, con1, 's62.t6250', {'F02': bid_id})
         self.pull_data(con, con1, 's62.t6238', {'F01': bid_id})
         self.pull_data(con, con1, 's65.t6504', {'F03': bid_id})
-        self.pull_data(con, con1, 's62.t6251', {'F03': bid_id})
-        self.pull_data(con, con1, 's61.t6110', " F01 IN (SELECT F02 FROM s62.t6230 WHERE F01="+bid_id+")")
-        self.pull_data(con, con1, 's61.t6110', " F01 IN (SELECT F03 FROM s62.t6250 WHERE F02="+bid_id+")")
-        self.pull_data(con, con1, 's61.T6101', " F02 IN (SELECT F03 FROM s62.t6250 WHERE F02="+bid_id+")")
+        # self.pull_data(con, con1, 's62.t6251', {'F03': bid_id})
         con1.query("UPDATE s62.t6250 SET F08='F' WHERE F02="+bid_id)
         con1.query("UPDATE s62.t6230 SET F20='DFK' WHERE F01="+bid_id)
         print "------------------end------------------ "
@@ -53,7 +54,7 @@ class PullData(object):
         db1 = MySQLImportExport.MySQLImporter()
         db1.set_connection(con1)
         db1.set_table(table_name)
-        # 添加过滤字段
+        # 添加过滤字段,判断是否存在，存在即更新，不存在插入
         db1.set_filters({'F01', 'F02', 'F03'})
         # db1.set_filters({'bid_id','id'})
         for l in list:

@@ -92,12 +92,12 @@ class MySQLImporter(object):
         i = 0
         for index in item:
             if hasattr(item[index], '__iter__'):
-                self.query += '\"' + self.separator.join(item[index]).encode("utf-8") + '\"'
+                self.query += '\'' + self.separator.join(item[index]).encode("utf-8") + '\''
             else:
                 if item[index] is None:
                     self.query += 'null'
                 else:
-                    self.query += '\"' + str(item[index]).encode("utf-8") + '\"'
+                    self.query += '\'' + str(item[index]).encode("utf-8") + '\''
             if i < l - 1:
                 self.query += ', '
             i += 1
@@ -112,12 +112,12 @@ class MySQLImporter(object):
             for index in item:
                 self.query += '`' + index + '`'
                 if hasattr(item[index], '__iter__'):
-                    self.query += '\"' + self.separator.join(item[index]).encode("utf-8") + '\"'
+                    self.query += '\'' + self.separator.join(item[index]).encode("utf-8") + '\''
                 else:
                     if item[index] is None:
                         self.query += 'null'
                     else:
-                        self.query += '\"' + str(item[index]).encode("utf-8") + '\"'
+                        self.query += '\'' + str(item[index]).encode("utf-8") + '\''
                 if i < l - 1:
                     self.query += ', '
                 i += 1
@@ -133,12 +133,12 @@ class MySQLImporter(object):
         for index in item:
             self.query += '`' + index + '`'
             if hasattr(item[index], '__iter__'):
-                self.query += '=\"' + self.separator.join(item[index]).encode("utf-8") + '\"'
+                self.query += '=\'' + self.separator.join(item[index]).encode("utf-8") + '\''
             else:
                 if item[index] is None:
                     self.query += '= null '
                 else:
-                    self.query += '=\"' + str(item[index]).encode("utf-8") + '\"'
+                    self.query += '=\'' + str(item[index]).encode("utf-8") + '\''
             if i < l - 1:
                 self.query += ', '
             i += 1
